@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Heritage Bakery NYC — Ancient grains from biodynamic farms in Belgium & France, shipped by sailboat, milled onsite in NYC. 8 West 40th Street.">
+  <meta name="theme-color" content="#003366">
+  <meta property="og:title" content="Heritage Bakery NYC">
+  <meta property="og:description" content="Ancient Grains. Sustainable. Better for You & the Planet.">
+  <meta property="og:type" content="restaurant.restaurant">
+  <title>Heritage Bakery NYC — Ancient Grains. Sustainable.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════
+       TOKENS — mobile-first
+    ═══════════════════════════════════════════════ */
+    :root {
+      --blue: #003366;
+      --blue-deep: #00264d;
+      --blue-soft: #1a4d7a;
+      --ink: #1a1a1a;
+      --ink-soft: #3a3a3a;
+      --muted: #6b6b6b;
+      --cream: #F5F1E8;
+      --cream-warm: #EDE6D3;
+      --bg: #ffffff;
+      --gold: #D4A574;
+      --sage: #5A7066;
+      --border: #E5DFD2;
+      --fd: 'Montserrat', 'Helvetica Neue', sans-serif;
+      --fb: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--fb);
+      font-size: 17px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img, video, iframe { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    h1, h2, h3, h4 { font-family: var(--fd); font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; }
+
+    /* ═══════════════════════════════════════════════
+       LOADER
+    ═══════════════════════════════════════════════ */
+    #loader {
+      position: fixed; inset: 0; background: var(--blue);
+      z-index: 1000; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      transition: opacity 0.7s ease, visibility 0.7s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-logo {
+      font-family: var(--fd); font-weight: 300;
+      font-size: 26px; letter-spacing: 0.22em;
+      color: var(--cream); text-transform: uppercase;
+    }
+    .loader-sub {
+      font-family: var(--fb); font-size: 11px; letter-spacing: 0.3em;
+      color: var(--gold); text-transform: uppercase;
+    }
+    .loader-bar { width: 180px; height: 2px; background: rgba(255,255,255,0.15); overflow: hidden; border-radius: 2px; }
+    .loader-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s linear; }
+
+    /* ═══════════════════════════════════════════════
+       HEADER — mobile: logo + hamburger
+    ═══════════════════════════════════════════════ */
+    #header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    #header.hero-mode { background: transparent; }
+    #header.solid-mode {
+      background: rgba(245, 241, 232, 0.96);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .logo {
+      font-family: var(--fd); font-weight: 600; font-size: 17px;
+      letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap;
+      transition: color 0.3s ease;
+    }
+    #header.hero-mode .logo { color: var(--cream); }
+    #header.solid-mode .logo { color: var(--blue); }
+    .logo-sub {
+      display: block; font-family: var(--fb); font-size: 10px;
+      letter-spacing: 0.2em; font-weight: 400;
+      margin-top: 2px; opacity: 0.7;
+    }
+    .desktop-nav { display: none; }
+    .header-cta { display: none; }
+    .menu-toggle {
+      display: flex; flex-direction: column; gap: 5px;
+      padding: 12px; margin: -12px;
+      min-width: 44px; min-height: 44px;
+      align-items: center; justify-content: center;
+    }
+    .menu-toggle span {
+      display: block; width: 22px; height: 2px; border-radius: 2px;
+      background: var(--cream); transition: background 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    }
+    #header.solid-mode .menu-toggle span { background: var(--blue); }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--cream); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--cream); }
+
+    /* ═══════════════════════════════════════════════
+       MOBILE DRAWER
+    ═══════════════════════════════════════════════ */
+    #drawer {
+      position: fixed; inset: 0; z-index: 99;
+      background: var(--blue);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 96px 32px 40px;
+      transform: translateY(-100%);
+      transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+      overflow-y: auto;
+    }
+    #drawer.open { transform: translateY(0); }
+    .drawer-links { display: flex; flex-direction: column; gap: 4px; }
+    .drawer-link {
+      font-family: var(--fd); font-size: 28px; font-weight: 400;
+      color: var(--cream); padding: 14px 0;
+      border-bottom: 1px solid rgba(245,241,232,0.12);
+      transition: color 0.2s ease;
+    }
+    .drawer-link:hover, .drawer-link:active { color: var(--gold); }
+    .drawer-ctas { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .drawer-cta {
+      padding: 18px 24px; text-align: center; min-height: 56px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fb); font-weight: 600; font-size: 15px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .drawer-cta.primary { background: var(--gold); color: var(--blue-deep); }
+    .drawer-cta.secondary { background: transparent; color: var(--cream); border: 1.5px solid rgba(245,241,232,0.35); }
+    .drawer-meta {
+      margin-top: 32px; padding-top: 24px;
+      border-top: 1px solid rgba(245,241,232,0.12);
+      color: rgba(245,241,232,0.6); font-size: 13px; line-height: 1.7;
+    }
+    .drawer-meta a { color: var(--gold); }
+
+    /* ═══════════════════════════════════════════════
+       HERO — scroll-driven video
+    ═══════════════════════════════════════════════ */
+    #hero { position: relative; height: 500vh; }
+    #heroVideo {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      object-fit: cover; z-index: 1; background: var(--blue);
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #heroVideo.hidden, #heroOverlay.hidden { visibility: hidden; }
+    #heroOverlay {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; height: 100dvh;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.55) 100%);
+      z-index: 2; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .caption {
+      position: fixed; z-index: 5; opacity: 0; pointer-events: none;
+      will-change: opacity, transform;
+      left: 24px; right: 24px; bottom: max(96px, env(safe-area-inset-bottom, 0) + 96px);
+      text-align: left;
+    }
+    .cap-label {
+      display: inline-block; font-family: var(--fb); font-weight: 600;
+      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .caption h2 {
+      font-family: var(--fd); font-weight: 400;
+      font-size: clamp(34px, 9vw, 64px); line-height: 1.02;
+      color: #ffffff; margin-bottom: 14px;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.35);
+      letter-spacing: -0.015em;
+    }
+    .caption p {
+      font-family: var(--fb); font-weight: 400; font-size: 16px;
+      color: rgba(255,255,255,0.9); line-height: 1.55;
+      max-width: 440px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+    }
+    .caption.finale {
+      left: 20px; right: 20px; bottom: auto; top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+    }
+    .finale-mark {
+      font-family: var(--fd); font-weight: 300;
+      font-size: clamp(32px, 10vw, 88px); line-height: 1;
+      color: #ffffff; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+    .finale-tag {
+      font-family: var(--fb); font-weight: 500;
+      font-size: clamp(15px, 4vw, 19px); line-height: 1.5;
+      color: rgba(255,255,255,0.92); letter-spacing: 0.02em;
+      margin-bottom: 32px; max-width: 460px; margin-left: auto; margin-right: auto;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .finale-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .finale-ctas .btn { min-height: 52px; padding: 16px 28px; font-size: 14px; }
+    .scroll-cue {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: max(24px, env(safe-area-inset-bottom, 24px));
+      z-index: 5; font-family: var(--fb); font-size: 10px;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      animation: nudge 2.2s ease-in-out infinite;
+      transition: opacity 0.3s ease;
+    }
+    @keyframes nudge { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
+
+    /* ═══════════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 18px 32px; min-height: 56px;
+      font-family: var(--fb); font-weight: 600; font-size: 15px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border-radius: 2px; transition: all 0.25s ease;
+      cursor: pointer; text-align: center;
+    }
+    .btn-primary { background: var(--blue); color: var(--cream); }
+    .btn-primary:hover, .btn-primary:active { background: var(--blue-deep); transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: var(--blue-deep); }
+    .btn-gold:hover, .btn-gold:active { background: #c09665; transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: #ffffff; border: 1.5px solid rgba(255,255,255,0.5); }
+    .btn-ghost:hover, .btn-ghost:active { background: rgba(255,255,255,0.1); border-color: #ffffff; }
+    .btn-outline { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+    .btn-outline:hover, .btn-outline:active { background: var(--blue); color: var(--cream); }
+
+    /* ═══════════════════════════════════════════════
+       SECTION PRIMITIVES
+    ═══════════════════════════════════════════════ */
+    .section { position: relative; z-index: 10; padding: 80px 0; background: var(--bg); }
+    .section-cream { background: var(--cream); }
+    .section-dark { background: var(--blue); color: var(--cream); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .eyebrow {
+      display: inline-block; font-family: var(--fb); font-weight: 600;
+      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 18px;
+    }
+    .section-dark .eyebrow { color: var(--gold); }
+    .section-title {
+      font-family: var(--fd); font-weight: 400;
+      font-size: clamp(30px, 6vw, 52px); line-height: 1.1;
+      letter-spacing: -0.015em; color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .section-dark .section-title { color: var(--cream); }
+    .section-lead {
+      font-family: var(--fb); font-weight: 400; font-size: 17px;
+      line-height: 1.65; color: var(--ink-soft); max-width: 560px;
+    }
+    .section-dark .section-lead { color: rgba(245,241,232,0.8); }
+    .section-head { margin-bottom: 48px; }
+    .section-head.center { text-align: center; }
+    .section-head.center .section-lead { margin-left: auto; margin-right: auto; }
+    .rule { width: 40px; height: 2px; background: var(--blue); margin: 20px 0; border: 0; }
+    .section-head.center .rule { margin-left: auto; margin-right: auto; }
+    .section-dark .rule { background: var(--gold); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.16s; }
+    .d3 { transition-delay: 0.24s; }
+    .d4 { transition-delay: 0.32s; }
+
+    /* ═══════════════════════════════════════════════
+       ANCIENT GRAINS — three value cards
+    ═══════════════════════════════════════════════ */
+    #ancient-grains { background: var(--cream); padding: 80px 0; }
+    .info-cards { display: flex; flex-direction: column; gap: 16px; }
+    .info-card {
+      background: var(--bg); padding: 32px 28px;
+      border-radius: 8px; border: 1px solid var(--border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .info-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,51,102,0.08); }
+    .info-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--blue); color: var(--cream);
+      font-family: var(--fd); font-weight: 500; font-size: 16px;
+      letter-spacing: 0.05em; margin-bottom: 18px;
+    }
+    .info-card h3 {
+      font-family: var(--fd); font-weight: 500;
+      font-size: 22px; color: var(--blue); margin-bottom: 10px;
+    }
+    .info-card p {
+      font-size: 16px; line-height: 1.65;
+      color: var(--ink-soft);
+    }
+
+    /* ═══════════════════════════════════════════════
+       MENU — featured items + full menu links
+    ═══════════════════════════════════════════════ */
+    #menu { background: var(--bg); padding: 80px 0; }
+    .featured-items { display: flex; flex-direction: column; gap: 24px; margin-bottom: 48px; }
+    .dish {
+      padding: 28px 24px; border-bottom: 1px solid var(--border);
+      padding-bottom: 28px;
+    }
+    .dish:last-child { border-bottom: 0; }
+    .dish-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+    .dish h3 {
+      font-family: var(--fd); font-weight: 500; font-size: 21px;
+      color: var(--ink); letter-spacing: -0.005em;
+    }
+    .dish-price {
+      font-family: var(--fd); font-weight: 500; font-size: 18px;
+      color: var(--blue); flex-shrink: 0;
+    }
+    .dish p {
+      font-size: 15.5px; line-height: 1.6; color: var(--muted);
+    }
+    .dish-tag {
+      display: inline-block; margin-top: 10px;
+      font-family: var(--fb); font-weight: 600; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .menu-links-title {
+      font-family: var(--fd); font-weight: 500; font-size: 15px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 18px;
+    }
+    .menu-links {
+      display: grid; grid-template-columns: 1fr; gap: 10px;
+    }
+    .menu-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 22px; min-height: 64px;
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--fd); font-weight: 500; font-size: 17px;
+      color: var(--ink); transition: all 0.25s ease;
+    }
+    .menu-link:hover, .menu-link:active {
+      background: var(--blue); color: var(--cream);
+      border-color: var(--blue); transform: translateY(-1px);
+    }
+    .menu-link::after {
+      content: '→'; font-size: 18px; opacity: 0.6; transition: transform 0.25s ease;
+    }
+    .menu-link:hover::after { transform: translateX(4px); opacity: 1; }
+
+    /* ═══════════════════════════════════════════════
+       CONTACT — location, hours, CTAs, map
+    ═══════════════════════════════════════════════ */
+    #contact { background: var(--blue); color: var(--cream); padding: 80px 0; }
+    .contact-grid { display: flex; flex-direction: column; gap: 28px; margin-bottom: 36px; }
+    .contact-block h3 {
+      font-family: var(--fb); font-weight: 600; font-size: 11px;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .contact-block p, .contact-block a {
+      font-family: var(--fd); font-weight: 400; font-size: 20px;
+      line-height: 1.4; color: var(--cream); letter-spacing: 0.01em;
+    }
+    .contact-block a { display: inline-block; transition: color 0.2s ease; }
+    .contact-block a:hover { color: var(--gold); }
+
+    .map-wrap {
+      width: 100%; aspect-ratio: 16/10;
+      border-radius: 8px; overflow: hidden; margin-bottom: 28px;
+      border: 1px solid rgba(245,241,232,0.15);
+    }
+    .map-wrap iframe { width: 100%; height: 100%; border: 0; filter: saturate(0.8) brightness(0.95); }
+
+    .contact-ctas { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ═══════════════════════════════════════════════
+       NEWSLETTER STRIP
+    ═══════════════════════════════════════════════ */
+    #newsletter { background: var(--cream-warm); padding: 60px 0; text-align: center; }
+    #newsletter h3 {
+      font-family: var(--fd); font-weight: 400;
+      font-size: clamp(24px, 5vw, 32px); color: var(--blue);
+      margin-bottom: 12px;
+    }
+    #newsletter p { color: var(--ink-soft); margin-bottom: 24px; font-size: 15.5px; }
+    .signup {
+      display: flex; flex-direction: column; gap: 10px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .signup input {
+      width: 100%; padding: 16px 18px; min-height: 52px;
+      font-family: var(--fb); font-size: 16px;
+      border: 1px solid var(--border); border-radius: 4px;
+      background: var(--bg); color: var(--ink);
+    }
+    .signup input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink); color: rgba(245,241,232,0.7);
+      padding: 48px 0 32px;
+    }
+    .footer-top {
+      display: flex; flex-direction: column; gap: 28px; padding-bottom: 28px;
+      border-bottom: 1px solid rgba(245,241,232,0.12); margin-bottom: 24px;
+    }
+    .footer-brand {
+      font-family: var(--fd); font-weight: 300;
+      font-size: 22px; letter-spacing: 0.18em;
+      color: var(--cream); text-transform: uppercase;
+      margin-bottom: 10px; display: block;
+    }
+    .footer-brand-sub {
+      font-size: 14px; line-height: 1.7; max-width: 320px;
+    }
+    .footer-cols { display: flex; flex-direction: column; gap: 24px; }
+    .fcol h4 {
+      font-family: var(--fb); font-weight: 600; font-size: 11px;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .fcol ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .fcol ul li, .fcol ul a { font-size: 15px; line-height: 1.5; color: rgba(245,241,232,0.6); transition: color 0.2s ease; }
+    .fcol ul a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex; flex-direction: column; gap: 12px;
+      font-size: 12px; letter-spacing: 0.02em;
+    }
+    .fsocial { display: flex; gap: 18px; flex-wrap: wrap; }
+    .fsocial a {
+      font-family: var(--fb); font-size: 12px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(245,241,232,0.5); transition: color 0.2s ease;
+    }
+    .fsocial a:hover { color: var(--gold); }
+
+    /* ═══════════════════════════════════════════════
+       TABLET — 641px+
+    ═══════════════════════════════════════════════ */
+    @media (min-width: 641px) {
+      body { font-size: 17px; }
+      .wrap { padding: 0 40px; }
+      .header-inner { padding: 20px 40px; }
+      .section, #ancient-grains, #menu, #contact { padding: 120px 0; }
+      .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .menu-links { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+      .contact-ctas { flex-direction: row; gap: 14px; }
+      .contact-ctas .btn { flex: 1; }
+      .featured-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .dish { padding: 0 0 24px 0; }
+      .signup { flex-direction: row; }
+      .signup input { flex: 1; }
+      .signup .btn { flex-shrink: 0; }
+      .caption { left: 56px; right: 56px; bottom: 88px; }
+      .caption.right-align { text-align: right; }
+      .caption p { font-size: 17px; }
+      .footer-top { flex-direction: row; justify-content: space-between; gap: 60px; }
+      .footer-cols { flex-direction: row; gap: 56px; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       DESKTOP — 1025px+
+    ═══════════════════════════════════════════════ */
+    @media (min-width: 1025px) {
+      .header-inner { padding: 24px 56px; }
+      .logo { font-size: 18px; }
+      .desktop-nav { display: flex; gap: 36px; }
+      .desktop-nav a {
+        font-family: var(--fb); font-weight: 500; font-size: 12px;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        transition: color 0.25s ease;
+      }
+      #header.hero-mode .desktop-nav a { color: rgba(245,241,232,0.85); }
+      #header.hero-mode .desktop-nav a:hover { color: var(--gold); }
+      #header.solid-mode .desktop-nav a { color: var(--ink); }
+      #header.solid-mode .desktop-nav a:hover { color: var(--blue); }
+      .header-cta {
+        display: inline-flex; padding: 12px 22px; min-height: 44px;
+        font-family: var(--fb); font-weight: 600; font-size: 12px;
+        letter-spacing: 0.15em; text-transform: uppercase;
+        background: var(--gold); color: var(--blue-deep);
+        border-radius: 2px; transition: background 0.25s ease;
+      }
+      .header-cta:hover { background: #c09665; }
+      .menu-toggle { display: none; }
+      .caption { left: 72px; right: auto; bottom: 120px; max-width: 560px; }
+      .caption.right-align { left: auto; right: 72px; text-align: right; }
+      .caption p { font-size: 18px; }
+      .section, #ancient-grains, #menu, #contact { padding: 140px 0; }
+      .section-head { margin-bottom: 72px; }
+      .wrap { padding: 0 56px; }
+      .menu-links { grid-template-columns: repeat(3, 1fr); }
+      .contact-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo">Heritage</div>
+    <div class="loader-sub">Bakery · NYC</div>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="header" class="hero-mode">
+    <div class="header-inner">
+      <a href="#" class="logo" aria-label="Heritage Bakery — Home">Heritage</a>
+      <nav class="desktop-nav" aria-label="Main">
+        <a href="#ancient-grains">Ancient Grains</a>
+        <a href="#menu">Restaurant</a>
+        <a href="#bakery">Bakery &amp; Catering</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="https://resy.com/cities/new-york-ny/venues/heritage-grand-bakery" target="_blank" rel="noopener" class="header-cta">Reservations</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE DRAWER -->
+  <div id="drawer" role="dialog" aria-label="Site menu" aria-hidden="true">
+    <nav class="drawer-links" aria-label="Mobile">
+      <a href="#ancient-grains" class="drawer-link">Ancient Grains</a>
+      <a href="#menu" class="drawer-link">Restaurant</a>
+      <a href="#bakery" class="drawer-link">Bakery &amp; Catering</a>
+      <a href="#contact" class="drawer-link">Contact</a>
+    </nav>
+    <div>
+      <div class="drawer-ctas">
+        <a href="https://resy.com/cities/new-york-ny/venues/heritage-grand-bakery" target="_blank" rel="noopener" class="drawer-cta primary">Make a Reservation</a>
+        <a href="https://order.toasttab.com/online/heritagegrandbakery" target="_blank" rel="noopener" class="drawer-cta secondary">Order Online</a>
+      </div>
+      <div class="drawer-meta">
+        8 West 40th Street · NYC<br>
+        <a href="tel:+12124199163">(212) 419-9163</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO — scroll-driven video -->
+  <section id="hero" aria-label="Heritage Bakery intro">
+    <video id="heroVideo" muted playsinline preload="auto" aria-hidden="true">
+      <source src="Heritage%20Bakery%201.mp4" type="video/mp4">
+    </video>
+    <div id="heroOverlay"></div>
+
+    <div class="caption" data-s="0.06" data-e="0.22">
+      <span class="cap-label">Belgium &amp; France</span>
+      <h2>Where It<br>Begins</h2>
+      <p>Biodynamic farms nurturing ancient grains for generations — untouched by industrial agriculture.</p>
+    </div>
+
+    <div class="caption right-align" data-s="0.20" data-e="0.38">
+      <span class="cap-label">The Atlantic</span>
+      <h2>By Sail,<br>Not Engine</h2>
+      <p>Every shipment crosses the ocean by sailboat — powered by wind, from field to shore.</p>
+    </div>
+
+    <div class="caption" data-s="0.36" data-e="0.56">
+      <span class="cap-label">Brooklyn, NY</span>
+      <h2>Milled<br>Onsite</h2>
+      <p>Fresh-milled daily on fine granite stone mills. Living flour, full nutrition, no compromise.</p>
+    </div>
+
+    <div class="caption right-align" data-s="0.54" data-e="0.74">
+      <span class="cap-label">The Craft</span>
+      <h2>Baked<br>with Purpose</h2>
+      <p>Every loaf is a story of land, patience, and intentional craft.</p>
+    </div>
+
+    <div class="caption finale" data-s="0.76" data-e="1.01">
+      <div class="finale-mark">Heritage<br>Bakery</div>
+      <div class="finale-tag">Ancient Grains. Sustainable.<br>Better for You &amp; the Planet.</div>
+      <div class="finale-ctas">
+        <a href="#menu" class="btn btn-gold">View Our Menu</a>
+        <a href="#ancient-grains" class="btn btn-ghost">Our Story</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue" id="scrollCue">Scroll to Explore</div>
+  </section>
+
+  <!-- ANCIENT GRAINS — three values -->
+  <section id="ancient-grains" aria-labelledby="ag-title">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Ancient Grains</span>
+        <h2 class="section-title" id="ag-title">Three Things<br>We Believe</h2>
+        <hr class="rule">
+        <p class="section-lead">From biodynamic soil in Europe to a Brooklyn table — our commitment to every step of the journey.</p>
+      </div>
+      <div class="info-cards">
+        <article class="info-card reveal d1">
+          <div class="info-num">01</div>
+          <h3>Biodynamic Farming</h3>
+          <p>Sourced exclusively from certified biodynamic farms in Belgium &amp; France, where soil is treated as a living ecosystem — no synthetic inputs, ever.</p>
+        </article>
+        <article class="info-card reveal d2">
+          <div class="info-num">02</div>
+          <h3>Sustainable Shipping</h3>
+          <p>Every shipment crosses the Atlantic by sailboat — wind-powered, carbon-zero. Slow, deliberate, and honest.</p>
+        </article>
+        <article class="info-card reveal d3">
+          <div class="info-num">03</div>
+          <h3>Milled Onsite</h3>
+          <p>Fine granite mills in our Brooklyn bakery turn whole grains into flour fresh before every bake. Nothing stripped, nothing lost.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU — featured items + links to live menus -->
+  <section id="menu" aria-labelledby="menu-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Restaurant</span>
+        <h2 class="section-title" id="menu-title">Taste the<br>Difference</h2>
+        <hr class="rule">
+        <p class="section-lead">Rooted in ancient tradition, shaped by New York craft. Every dish begins with flour we mill ourselves.</p>
+      </div>
+
+      <div class="featured-items">
+        <article class="dish reveal d1">
+          <div class="dish-head">
+            <h3>Ancient Grains Salad</h3>
+            <span class="dish-price">$19</span>
+          </div>
+          <p>Arugula, cherry tomato, apple, shallot, toasted seeds, feta.</p>
+          <span class="dish-tag">Signature</span>
+        </article>
+
+        <article class="dish reveal d2">
+          <div class="dish-head">
+            <h3>Moroccan Lamb Flatbread</h3>
+            <span class="dish-price">$23</span>
+          </div>
+          <p>Savory ancient grain flatbread, spiced lamb, pickled shallots.</p>
+          <span class="dish-tag">House Favorite</span>
+        </article>
+
+        <article class="dish reveal d3">
+          <div class="dish-head">
+            <h3>Stone-Milled Sourdough</h3>
+            <span class="dish-price">Bakery</span>
+          </div>
+          <p>Our signature loaf — fresh-milled ancient grains, wild-starter ferment, twenty-four hour rise.</p>
+          <span class="dish-tag">Daily</span>
+        </article>
+
+        <article class="dish reveal d4">
+          <div class="dish-head">
+            <h3>Seasonal Selections</h3>
+            <span class="dish-price">Rotating</span>
+          </div>
+          <p>A changing menu shaped by each season's harvest — from our partners in Belgium, France, and the Hudson Valley.</p>
+          <span class="dish-tag">Always Fresh</span>
+        </article>
+      </div>
+
+      <div class="reveal">
+        <div class="menu-links-title">Explore Full Menus</div>
+        <div class="menu-links" id="bakery">
+          <a href="https://www.heritagegrandbakery.com/menu/brunch/" target="_blank" rel="noopener" class="menu-link">Brunch</a>
+          <a href="https://www.heritagegrandbakery.com/menu/lunch/" target="_blank" rel="noopener" class="menu-link">Lunch &amp; Dinner</a>
+          <a href="https://www.heritagegrandbakery.com/menu/twilight-menu/" target="_blank" rel="noopener" class="menu-link">Late Night</a>
+          <a href="https://www.heritagegrandbakery.com/menu/happy-hour/" target="_blank" rel="noopener" class="menu-link">Drinks</a>
+          <a href="https://www.heritagegrandbakery.com/bakery-landing/" target="_blank" rel="noopener" class="menu-link">Bakery &amp; Catering</a>
+          <a href="https://order.toasttab.com/online/heritagegrandbakery" target="_blank" rel="noopener" class="menu-link">Order Online</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT — location, hours, map, CTAs -->
+  <section id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Visit Us</span>
+        <h2 class="section-title" id="contact-title">8 West 40th Street<br>New York</h2>
+        <hr class="rule">
+        <p class="section-lead">Find us in Midtown, a block from Bryant Park. Walk in for bakery, stay for dinner.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-block reveal d1">
+          <h3>Address</h3>
+          <p>8 West 40th Street<br>New York, NY 10018</p>
+        </div>
+        <div class="contact-block reveal d2">
+          <h3>Call</h3>
+          <a href="tel:+12124199163">(212) 419-9163</a>
+        </div>
+        <div class="contact-block reveal d3">
+          <h3>Hours</h3>
+          <p>Brunch · Sat–Sun 11–4<br>Restaurant · Daily</p>
+        </div>
+      </div>
+
+      <div class="map-wrap reveal">
+        <iframe
+          src="https://www.google.com/maps?q=8+West+40th+Street+New+York+NY+10018&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Heritage Bakery location map"
+          allowfullscreen></iframe>
+      </div>
+
+      <div class="contact-ctas reveal">
+        <a href="https://resy.com/cities/new-york-ny/venues/heritage-grand-bakery" target="_blank" rel="noopener" class="btn btn-gold">Make a Reservation</a>
+        <a href="https://order.toasttab.com/online/heritagegrandbakery" target="_blank" rel="noopener" class="btn btn-ghost">Order Online</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section id="newsletter">
+    <div class="wrap reveal">
+      <h3>Stay Close to the Source</h3>
+      <p>Seasonal menu updates, new loaves, and stories from the farms. No noise — just the good stuff.</p>
+      <form class="signup" onsubmit="event.preventDefault(); this.querySelector('input').value=''; this.querySelector('button').textContent='Thank You';">
+        <label for="email" class="visually-hidden" style="position:absolute;left:-9999px;">Email address</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <span class="footer-brand">Heritage</span>
+          <p class="footer-brand-sub">Ancient grains from biodynamic farms in Belgium &amp; France, shipped by sailboat, milled fresh onsite in Brooklyn.</p>
+        </div>
+        <div class="footer-cols">
+          <div class="fcol">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="#ancient-grains">Ancient Grains</a></li>
+              <li><a href="#menu">Restaurant</a></li>
+              <li><a href="#bakery">Bakery &amp; Catering</a></li>
+              <li><a href="https://www.heritagegrandbakery.com/" target="_blank" rel="noopener">Website</a></li>
+            </ul>
+          </div>
+          <div class="fcol">
+            <h4>Visit</h4>
+            <ul>
+              <li>8 West 40th Street</li>
+              <li>New York, NY 10018</li>
+              <li><a href="tel:+12124199163">(212) 419-9163</a></li>
+              <li><a href="https://resy.com/cities/new-york-ny/venues/heritage-grand-bakery" target="_blank" rel="noopener">Reserve on Resy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Heritage Bakery NYC. All rights reserved.</span>
+        <div class="fsocial">
+          <a href="https://www.heritagegrandbakery.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.heritagegrandbakery.com/" target="_blank" rel="noopener">TikTok</a>
+          <a href="https://www.heritagegrandbakery.com/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── LOADER ──────────────────────────────────
+    const loader = document.getElementById('loader');
+    const loaderFill = document.getElementById('loaderFill');
+    const video = document.getElementById('heroVideo');
+    document.body.style.overflow = 'hidden';
+
+    let prog = 0;
+    const loaderTick = setInterval(() => {
+      prog += Math.random() * 10;
+      if (prog > 88) prog = 88;
+      loaderFill.style.width = prog + '%';
+    }, 130);
+
+    function hideLoader() {
+      clearInterval(loaderTick);
+      loaderFill.style.width = '100%';
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        document.body.style.overflow = '';
+      }, 450);
+    }
+    video.addEventListener('canplaythrough', hideLoader, { once: true });
+    setTimeout(hideLoader, 5500);
+
+    // ── DRAWER ──────────────────────────────────
+    const header = document.getElementById('header');
+    const toggle = document.getElementById('menuToggle');
+    const drawer = document.getElementById('drawer');
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      toggle.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    toggle.addEventListener('click', () => {
+      drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+    });
+    document.querySelectorAll('.drawer-link, .drawer-cta').forEach(a => a.addEventListener('click', closeDrawer));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+    // ── SCROLL HERO ─────────────────────────────
+    const hero = document.getElementById('hero');
+    const overlay = document.getElementById('heroOverlay');
+    const captions = document.querySelectorAll('.caption');
+    const scrollCue = document.getElementById('scrollCue');
+    let ticking = false;
+
+    function paint() {
+      const sy = window.scrollY;
+      const heroH = hero.offsetHeight;
+
+      if (sy <= heroH) {
+        const p = sy / heroH;
+
+        video.style.opacity = '1';
+        overlay.style.opacity = '1';
+
+        if (video.duration && !isNaN(video.duration)) {
+          video.currentTime = p * video.duration;
+        }
+
+        captions.forEach(c => {
+          const s = parseFloat(c.dataset.s);
+          const e = parseFloat(c.dataset.e);
+          const isFinale = c.classList.contains('finale');
+
+          if (p >= s && p <= e) {
+            const lp = (p - s) / (e - s);
+            const fi = lp < 0.2 ? lp / 0.2 : 1;
+            const fo = lp > 0.8 ? (1 - lp) / 0.2 : 1;
+            const op = Math.min(fi, fo);
+            const yOff = (1 - fi) * 18;
+            c.style.opacity = op;
+            c.style.transform = isFinale
+              ? `translateY(calc(-50% + ${yOff}px))`
+              : `translateY(${yOff}px)`;
+          } else {
+            c.style.opacity = '0';
+            c.style.transform = isFinale ? 'translateY(calc(-50% + 18px))' : 'translateY(18px)';
+          }
+        });
+
+        scrollCue.style.opacity = p < 0.05 ? 1 : 0;
+
+        header.classList.remove('solid-mode');
+        header.classList.add('hero-mode');
+      } else {
+        video.style.opacity = '0';
+        overlay.style.opacity = '0';
+        captions.forEach(c => { c.style.opacity = '0'; });
+        scrollCue.style.opacity = 0;
+
+        header.classList.remove('hero-mode');
+        header.classList.add('solid-mode');
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(paint); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', () => { if (!ticking) { requestAnimationFrame(paint); ticking = true; } });
+    paint();
+
+    // ── REVEAL ON SCROLL ────────────────────────
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(r => io.observe(r));
+  </script>
+</body>
+</html>
